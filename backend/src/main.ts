@@ -18,7 +18,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, SwaggerConfig);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(port, () => {
+  await app.listen(port, async () => {
     Logger.title(`${process.env.PROJECT_NAME}`.toUpperCase())
     Logger.info(`Server is starting on port ${port}`)
   });
