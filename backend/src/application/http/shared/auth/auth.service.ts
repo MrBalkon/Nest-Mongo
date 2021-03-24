@@ -7,7 +7,6 @@ import LogInDto from '@domain/auth/dto/logIn.dto';
 
 import { JwtPayload } from './interfaces/jwt.payload';
 import { Role } from '@infrastructure/auth/roles.enum';
-import encryptPassword from './password.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -21,17 +20,17 @@ export class AuthenticationService {
       const createdUser = await this.usersService.create({
         ...registrationData,
         role: Role.Regular,
-        password: registrationData.password
+        password: registrationData.password,
+        registered: true
       });
       return createdUser;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(error.message, error.status);
     }
   }
 
   public async login(loginData: LogInDto){
     const user = await this.usersService.getByLogin(loginData.login);
-    console.log(user)
     if (!loginData.password)  throw new HttpException("You must provide password", HttpStatus.BAD_REQUEST);
     if (!loginData.login)  throw new HttpException("You must provide login", HttpStatus.BAD_REQUEST);
     if (!user) throw new HttpException("User not exists", HttpStatus.NOT_FOUND);

@@ -21,6 +21,10 @@ export class SightService {
       return this.SightModel.findOne();
     }
 
+    async findSightsByCityName(): Promise<Sight> {
+      return await this.SightModel.findOne();
+    }
+
     async remove(body: Sight): Promise<Sight> {
       return this.SightModel.remove(body);
     }

@@ -1,22 +1,27 @@
-import { BootstrapModule } from './infrastructure/data/bootstrap.module';
-import { CityModule } from '@application/http/city/city.module'
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerMiddleware } from '@infrastructure/logger/logger.middleware';
 import { AuthCheckerMiddleware } from '@application/http/shared/auth/auth.middleware'
-import { MongooseModule } from '@nestjs/mongoose';
 import { SightModule } from '@application/http/sights/sight.module';
 import { AuthenticationModule } from '@application/http/shared/auth/auth.module';
+import { UserModule } from '@application/http/user/user.module';
+import { CityModule } from '@application/http/city/city.module';
+import { TenancyModule } from '@infrastructure/tenancy';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    BootstrapModule,
-    AuthenticationModule,
+    // ConfigModule.forRoot(),
+    MongooseModule.forRoot(`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/users`),
+    TenancyModule.forRoot({
+      options: {},
+      uri: (tenantId: string) => `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${tenantId}`,
+    }),
+    UserModule,
     SightModule,
     CityModule,
-    ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGO_MAIN_URL),
-    BootstrapModule],
+    AuthenticationModule,
+  ],
   controllers: [],
   providers: [],
 })

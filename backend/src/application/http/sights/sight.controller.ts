@@ -1,22 +1,22 @@
 import createSightDto from '@domain/sight/dtos/createSight.dto';
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { BadRequestFilter } from '@infrastructure/error/BadRequestFilter';
+import { MongoExceptionFilter } from '@infrastructure/error/MongoExceptionFilter';
+import { Body, Controller, Get, HttpCode, Param, Post, UseFilters } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { SightService } from './sight.service';
 
 @ApiTags("sight")
-@Controller("sight")
+@Controller()
 export class SightController {
     constructor(public service: SightService) {}
 
-    @Get()
+    @Get("/:cityName/sights")
     @HttpCode(200)
-    async findAll(){
-        return await this.service.findAll()
+    @ApiParam({
+        name: 'cityName'
+    })
+    async findSightsByCityName(@Param("cityName") cityName){
+        return await this.service.findSightsByCityName()
     }
 
-    @Post()
-    @HttpCode(200)
-    async create(@Body() body: createSightDto){
-        return await this.service.create(body)
-    }
 }

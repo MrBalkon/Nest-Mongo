@@ -14,9 +14,4 @@ export class UserController {
         return await this.service.findAll()
     }
 
-    // @Post()
-    // @HttpCode(200)
-    // async create(@Body() body: createUserDto){
-    //     return await this.service.create(body)
-    // }
 }

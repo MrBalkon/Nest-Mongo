@@ -10,7 +10,7 @@ require('dotenv').config();
 
 async function bootstrap() {
   const port = process.env.SERVER_PORT
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule)
 
   app.enableCors();
   app.use(compression());
